@@ -27,9 +27,9 @@ func (ops Ops) Contains(a []E, elem E) bool {
 func (ops Ops) Delete(a []E, elem E) ([]E, bool) {
 	idx := ops.IndexOf(a, elem)
 	if idx < 0 {
-		return a, true
+		return a, false
 	}
-	return ops.DeleteIndex(a, idx), false
+	return ops.DeleteIndex(a, idx), true
 }
 
 func (ops Ops) DeleteIndex(a []E, idx int) []E {
@@ -56,9 +56,10 @@ func (ops Ops) Filter(a []E, pred func(E) bool) []E {
 	return ops.FilterTo(a, nil, pred)
 }
 
-//FilterSelf - inplace, non-allocating operation
-func (ops Ops) FilterSelf(a []E, pred func(E) bool) []E {
-	return ops.FilterTo(a, a[:0], pred)
+//FilterMut - inplace (mutating) non-allocating operation
+func (ops Ops) FilterMut(a *[]E, pred func(E) bool) {
+	s := *a
+	*a = ops.FilterTo(s, s[:0], pred)
 }
 
 func (Ops) Some(a []E, pred func(E) bool) bool {
