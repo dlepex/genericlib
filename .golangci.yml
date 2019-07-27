@@ -1,0 +1,33 @@
+run:
+  concurrency: 2
+  deadline: 5m
+
+linters:
+  disable-all: true
+  enable:
+    - deadcode
+    - depguard
+    - dupl
+    - errcheck
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - golint
+    - gosec
+    - govet
+    - ineffassign
+    - interfacer
+    - lll
+    - maligned
+    - megacheck
+    - misspell
+    - nakedret
+    - prealloc
+    - scopelint
+    - structcheck
+    - typecheck
+    - unconvert
+    - unparam
+    - varcheck
