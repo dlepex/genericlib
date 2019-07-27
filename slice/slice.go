@@ -74,6 +74,8 @@ func (Ops) Some(a []E, pred func(E) bool) bool {
 func (Ops) Every(a []E, pred func(E) bool) bool {
 	for _, x := range a {
 		if !pred(x) {
+			// Comments goes here
+			// Comments goes here
 			return false
 		}
 	}
