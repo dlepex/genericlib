@@ -1,9 +1,9 @@
 package slice
 
-//E - element type
+// E - element type
 type E = interface{}
 
-//Ops - slice operations type
+// Ops - slice operations type
 type Ops struct{}
 
 func (Ops) Pop(a []E) ([]E, E) {
@@ -49,23 +49,23 @@ func (Ops) Reverse(a []E) {
 	}
 }
 
-func (Ops) FilterTo(from []E, to []E, pred func(E) bool) []E {
-	for _, x := range from {
+func (Ops) FilterTo(dest []E, src []E, pred func(E) bool) []E {
+	for _, x := range src {
 		if pred(x) {
-			to = append(to, x)
+			dest = append(dest, x)
 		}
 	}
-	return to
+	return dest
 }
 
 func (ops Ops) Filter(a []E, pred func(E) bool) []E {
-	return ops.FilterTo(a, nil, pred)
+	return ops.FilterTo(nil, a, pred)
 }
 
-//FilterMut - inplace (mutating) non-allocating operation
+// FilterMut - inplace (mutating) filtering without allocation a new slice
 func (ops Ops) FilterMut(a *[]E, pred func(E) bool) {
 	s := *a
-	*a = ops.FilterTo(s, s[:0], pred)
+	*a = ops.FilterTo(s[:0], s, pred)
 }
 
 func (Ops) Some(a []E, pred func(E) bool) bool {
