@@ -9,6 +9,7 @@ func TestSlice(t *testing.T) {
 	a = append(a, 1)
 	a = append(a, 2)
 	a = append(a, 3)
+	ops.DeleteIndex(a, 2)
 	aa = append(aa, a...)
 	ops.Reverse(aa)
 	ops.FilterMut(&a, func(e E) bool {

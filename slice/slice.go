@@ -11,6 +11,12 @@ func (Ops) Pop(a []E) ([]E, E) {
 	return a[:l-1], a[l-1]
 }
 
+func (Ops) Copy(a []E) []E {
+	dest := make([]E, len(a))
+	copy(dest, a)
+	return dest
+}
+
 func (Ops) IndexOf(a []E, elem E) int {
 	for i, e := range a {
 		if e == elem {
@@ -74,8 +80,6 @@ func (Ops) Some(a []E, pred func(E) bool) bool {
 func (Ops) Every(a []E, pred func(E) bool) bool {
 	for _, x := range a {
 		if !pred(x) {
-			// Comments goes here
-			// Comments goes here
 			return false
 		}
 	}
