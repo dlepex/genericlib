@@ -45,16 +45,8 @@ func (s Set) Subtract(other Set) {
 	}
 }
 
-func (s Set) Retain(other Set) {
-	for k := range s {
-		if !other.Contains(k) {
-			delete(s, k)
-		}
-	}
-}
-
 func (s Set) ToSlice() []E {
-	a := make([]E, len(s))
+	a := make([]E, 0, len(s))
 	for k := range s {
 		a = append(a, k)
 	}
