@@ -1,26 +1,26 @@
 package slice
 
-// E - element type
+// E - slice element type
 type E = interface{}
 
-// Ops - slice operations type
-type Ops struct{}
+// Basic - basic slice operations
+type Basic struct{}
 
-// OpsPred - slice operations type with predicate
-type OpsPred struct{}
+// Pred - slice operations that require predicate (filter, exists, all)
+type Pred struct{}
 
-func (Ops) Pop(a []E) ([]E, E) {
+func (Basic) Pop(a []E) ([]E, E) {
 	l := len(a)
 	return a[:l-1], a[l-1]
 }
 
-func (Ops) Copy(a []E) []E {
+func (Basic) Copy(a []E) []E {
 	dest := make([]E, len(a))
 	copy(dest, a)
 	return dest
 }
 
-func (Ops) IndexOf(a []E, elem E) int {
+func (Basic) IndexOf(a []E, elem E) int {
 	for i, e := range a {
 		if e == elem {
 			return i
@@ -29,30 +29,29 @@ func (Ops) IndexOf(a []E, elem E) int {
 	return -1
 }
 
-func (ops Ops) Contains(a []E, elem E) bool {
-	return ops.IndexOf(a, elem) >= 0
+func (b Basic) Contains(a []E, elem E) bool {
+	return b.IndexOf(a, elem) >= 0
 }
 
-func (ops Ops) Delete(a []E, elem E) ([]E, bool) {
-	idx := ops.IndexOf(a, elem)
+func (b Basic) Delete(a []E, elem E) ([]E, bool) {
+	idx := b.IndexOf(a, elem)
 	if idx < 0 {
 		return a, false
 	}
-	return ops.DeleteIndex(a, idx), true
+	return b.DeleteAt(a, idx), true
 }
 
-func (ops Ops) DeleteIndex(a []E, idx int) []E {
-	return append(a[0:idx], a[idx+1:]...)
-}
+func (b Basic) DeleteAt(a []E, idx int) []E { return append(a[0:idx], a[idx+1:]...) }
 
-func (Ops) Reverse(a []E) {
-	for i := len(a)/2 - 1; i >= 0; i-- {
-		opp := len(a) - 1 - i
+func (Basic) Reverse(a []E) {
+	l := len(a)
+	for i := l/2 - 1; i >= 0; i-- {
+		opp := l - 1 - i
 		a[i], a[opp] = a[opp], a[i]
 	}
 }
 
-func (OpsPred) FilterTo(dest []E, src []E, pred func(E) bool) []E {
+func (Pred) FilterTo(dest []E, src []E, pred func(E) bool) []E {
 	for _, x := range src {
 		if pred(x) {
 			dest = append(dest, x)
@@ -61,26 +60,31 @@ func (OpsPred) FilterTo(dest []E, src []E, pred func(E) bool) []E {
 	return dest
 }
 
-func (ops OpsPred) Filter(a []E, pred func(E) bool) []E {
-	return ops.FilterTo(nil, a, pred)
+func (p Pred) Filter(a []E, pred func(E) bool) []E {
+	return p.FilterTo(nil, a, pred)
 }
 
-// FilterMut - inplace (mutating) filtering without allocation a new slice
-func (ops OpsPred) FilterMut(a *[]E, pred func(E) bool) {
+// FilterMut - inplace (mutating) filtering. No allocation.s
+func (p Pred) FilterMut(a *[]E, pred func(E) bool) {
 	s := *a
-	*a = ops.FilterTo(s[:0], s, pred)
+	*a = p.FilterTo(s[:0], s, pred)
 }
 
-func (OpsPred) Some(a []E, pred func(E) bool) bool {
-	for _, x := range a {
+// FindIndex - same as IndexOf, but with custom predicate
+func (Pred) FindIndex(a []E, pred func(E) bool) int {
+	for i, x := range a {
 		if pred(x) {
-			return true
+			return i
 		}
 	}
-	return false
+	return -1
 }
 
-func (OpsPred) Every(a []E, pred func(E) bool) bool {
+// Exists - aka "some"
+func (p Pred) Exists(a []E, pred func(E) bool) bool { return p.FindIndex(a, pred) >= 0 }
+
+// All - aka "every"
+func (Pred) All(a []E, pred func(E) bool) bool {
 	for _, x := range a {
 		if !pred(x) {
 			return false

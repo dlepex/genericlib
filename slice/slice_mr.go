@@ -1,6 +1,6 @@
 package slice
 
-// D - destination type
+// D - destination type for map or reduce
 type D = interface{}
 
 type Map struct{}

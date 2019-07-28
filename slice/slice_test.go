@@ -2,15 +2,15 @@ package slice
 
 import "testing"
 
-var ops Ops
-var pred OpsPred
+var ops Basic
+var pred Pred
 
 func TestSlice(t *testing.T) {
 	var a, aa []E
 	a = append(a, 1)
 	a = append(a, 2)
 	a = append(a, 3)
-	ops.DeleteIndex(a, 2)
+	ops.DeleteAt(a, 2)
 	aa = append(aa, a...)
 	ops.Reverse(aa)
 
