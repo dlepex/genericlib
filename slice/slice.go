@@ -6,6 +6,9 @@ type E = interface{}
 // Ops - slice operations type
 type Ops struct{}
 
+// OpsPred - slice operations type with predicate
+type OpsPred struct{}
+
 func (Ops) Pop(a []E) ([]E, E) {
 	l := len(a)
 	return a[:l-1], a[l-1]
@@ -49,7 +52,7 @@ func (Ops) Reverse(a []E) {
 	}
 }
 
-func (Ops) FilterTo(dest []E, src []E, pred func(E) bool) []E {
+func (OpsPred) FilterTo(dest []E, src []E, pred func(E) bool) []E {
 	for _, x := range src {
 		if pred(x) {
 			dest = append(dest, x)
@@ -58,17 +61,17 @@ func (Ops) FilterTo(dest []E, src []E, pred func(E) bool) []E {
 	return dest
 }
 
-func (ops Ops) Filter(a []E, pred func(E) bool) []E {
+func (ops OpsPred) Filter(a []E, pred func(E) bool) []E {
 	return ops.FilterTo(nil, a, pred)
 }
 
 // FilterMut - inplace (mutating) filtering without allocation a new slice
-func (ops Ops) FilterMut(a *[]E, pred func(E) bool) {
+func (ops OpsPred) FilterMut(a *[]E, pred func(E) bool) {
 	s := *a
 	*a = ops.FilterTo(s[:0], s, pred)
 }
 
-func (Ops) Some(a []E, pred func(E) bool) bool {
+func (OpsPred) Some(a []E, pred func(E) bool) bool {
 	for _, x := range a {
 		if pred(x) {
 			return true
@@ -77,7 +80,7 @@ func (Ops) Some(a []E, pred func(E) bool) bool {
 	return false
 }
 
-func (Ops) Every(a []E, pred func(E) bool) bool {
+func (OpsPred) Every(a []E, pred func(E) bool) bool {
 	for _, x := range a {
 		if !pred(x) {
 			return false

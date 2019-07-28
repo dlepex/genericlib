@@ -3,6 +3,7 @@ package slice
 import "testing"
 
 var ops Ops
+var pred OpsPred
 
 func TestSlice(t *testing.T) {
 	var a, aa []E
@@ -12,7 +13,8 @@ func TestSlice(t *testing.T) {
 	ops.DeleteIndex(a, 2)
 	aa = append(aa, a...)
 	ops.Reverse(aa)
-	ops.FilterMut(&a, func(e E) bool {
+
+	pred.FilterMut(&a, func(e E) bool {
 		return e.(int) != 2
 	})
 	b, x := ops.Pop(a)
