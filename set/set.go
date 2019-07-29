@@ -44,11 +44,3 @@ func (s Set) Subtract(other Set) {
 		delete(s, k)
 	}
 }
-
-func (s Set) ToSlice() []E {
-	a := make([]E, 0, len(s))
-	for k := range s {
-		a = append(a, k)
-	}
-	return a
-}
